@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827"><title>Collection Hub</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{--bg:#0b1020;--panel:#151d31;--panel2:#1b2640;--text:#f8fafc;--muted:#9ca3af;--line:#2b3856;--poke:#ef4444;--coin:#f59e0b;--blue:#3b82f6;--green:#22c55e}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b1020,#101827);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button,input,select{font:inherit}.app{max-width:1100px;margin:auto;min-height:100vh;padding-bottom:84px}.top{padding:22px 18px 10px}.top h1{margin:0;font-size:1.65rem}.top p{margin:5px 0;color:var(--muted)}
+.view{padding:10px 16px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.hubcard{border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:20px;text-align:left;color:var(--text);min-height:190px;box-shadow:0 10px 30px #0003}
+.hubcard .icon{font-size:3rem}.hubcard h2{margin:12px 0 5px}.hubcard p{color:var(--muted);margin:0 0 16px}.poke{border-top:5px solid var(--poke)}.coin{border-top:5px solid var(--coin)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0 16px}.kpi{background:var(--panel);border:1px solid var(--line);padding:13px;border-radius:16px}.kpi b{display:block;font-size:1.25rem}.kpi span{color:var(--muted);font-size:.78rem}
+.toolbar{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:14px}.toolbar input,.toolbar select{background:var(--panel);border:1px solid var(--line);color:white;padding:12px;border-radius:12px}
+.btn{border:0;border-radius:12px;padding:11px 14px;background:var(--blue);color:white;font-weight:750}.ghost{background:var(--panel);border:1px solid var(--line)}.back{margin-bottom:12px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:14px}.panel h3{margin:0 0 10px}.setgrid,.coinGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.tile{background:var(--panel2);border:1px solid var(--line);border-radius:15px;padding:13px;color:white;text-align:left}.tile img{width:100%;height:68px;object-fit:contain}.meta{font-size:.78rem;color:var(--muted)}.progress{height:7px;background:#0b1020;border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:var(--green)}
+.cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}.card{background:var(--panel2);border:1px solid var(--line);border-radius:14px;overflow:hidden}.card img{width:100%;aspect-ratio:2.5/3.5;object-fit:cover;background:#111827}.body{padding:9px}.name{font-weight:800;font-size:.88rem}.checks{display:grid;gap:6px;margin-top:8px}.checks label{display:flex;justify-content:space-between;gap:5px;font-size:.78rem}.checks input{accent-color:var(--green)}
+.hidden{display:none}.notice{color:var(--muted);text-align:center;padding:22px}.bottom{position:fixed;bottom:0;left:0;right:0;background:#0b1020eF;backdrop-filter:blur(10px);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:20}.bottom div{width:min(1100px,100%);display:grid;grid-template-columns:repeat(3,1fr)}.nav{background:none;border:0;color:var(--muted);padding:12px}.nav.active{color:white}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}.hubcard{min-height:155px}.kpis{grid-template-columns:repeat(3,1fr)}.cardgrid{grid-template-columns:repeat(2,1fr)}}
+</style></head>
+<body><main class="app">
+<header class="top"><h1>Collection Hub</h1><p>Pokémon cards + coins, in one place.</p></header>
+
+<section id="home" class="view">
+<div class="grid2">
+<button class="hubcard poke" onclick="openPokemon()"><div class="icon">🃏</div><h2>Pokémon Cards</h2><p>Sets, variations, Have/Need, quantities and completion.</p><b>Open collection →</b></button>
+<button class="hubcard coin" onclick="openCoins()"><div class="icon">🪙</div><h2>Coins</h2><p>Type, year, mint mark, variants and Have/Need.</p><b>Open collection →</b></button>
+</div></section>
+
+<section id="pokemon" class="view hidden">
+<button class="btn ghost back" onclick="goHome()">← Collection Hub</button>
+<h2>Pokémon Collection</h2>
+<div class="kpis"><div class="kpi"><b id="pOwned">0</b><span>Owned variations</span></div><div class="kpi"><b id="pUnique">0</b><span>Unique cards</span></div><div class="kpi"><b id="pNeeded">—</b><span>Needed in set</span></div></div>
+<div class="toolbar"><input id="pSearch" placeholder="Search sets or cards"><select id="pFilter"><option value="all">All</option><option value="have">Have</option><option value="need">Need</option></select></div>
+<div id="pSets" class="panel"><h3>Sets</h3><div id="setGrid" class="setgrid"><div class="notice">Loading Pokémon sets…</div></div></div>
+<div id="pCards" class="panel hidden"><button class="btn ghost back" onclick="backSets()">← Sets</button><h3 id="setTitle"></h3><div id="setMeta" class="meta"></div><div id="cardGrid" class="cardgrid"></div></div>
+</section>
+
+<section id="coins" class="view hidden">
+<button class="btn ghost back" onclick="goHome()">← Collection Hub</button><h2>Coin Collection</h2>
+<div class="kpis"><div class="kpi"><b id="cOwned">0</b><span>Owned</span></div><div class="kpi"><b id="cNeeded">0</b><span>Needed</span></div><div class="kpi"><b id="cTypes">6</b><span>Types</span></div></div>
+<div class="panel"><h3>Browse by type</h3><div class="coinGrid" id="coinGrid"></div></div>
+<div class="panel"><h3>Next step</h3><p class="meta">This v1 has the coin structure ready. Your detailed year/mint/variant lists can be imported into the next build.</p></div>
+</section>
+</main>
+<nav class="bottom"><div><button class="nav active" onclick="goHome()">⌂<br><small>Hub</small></button><button class="nav" onclick="openPokemon()">🃏<br><small>Pokémon</small></button><button class="nav" onclick="openCoins()">🪙<br><small>Coins</small></button></div></nav>
+<script>
+const API='https://api.pokemontcg.io/v2', KEY='collection-hub-pokemon-v1';
+const P={sets:[],set:null,cards:[],collection:JSON.parse(localStorage.getItem(KEY)||'{}')};
+const $=s=>document.querySelector(s);
+function view(id){['home','pokemon','coins'].forEach(x=>$('#'+x).classList.toggle('hidden',x!==id));document.querySelectorAll('.nav').forEach((n,i)=>n.classList.toggle('active',['home','pokemon','coins'][i]===id));scrollTo(0,0)}
+function goHome(){view('home')} function openPokemon(){view('pokemon');if(!P.sets.length)loadSets()} function openCoins(){view('coins');renderCoins()}
+function save(){localStorage.setItem(KEY,JSON.stringify(P.collection));updatePKpis()}
+function variants(id){return P.collection[id]||{regular:0,reverse:0,holo:0}}
+function updatePKpis(){let vals=Object.values(P.collection);$('#pOwned').textContent=vals.reduce((n,v)=>n+(v.regular||0)+(v.reverse||0)+(v.holo||0),0);$('#pUnique').textContent=vals.filter(v=>(v.regular||0)+(v.reverse||0)+(v.holo||0)>0).length;$('#pNeeded').textContent=P.set?P.cards.filter(c=>{let v=variants(c.id);return !(v.regular||v.reverse||v.holo)}).length:'—'}
+async function loadSets(){try{let r=await fetch(API+'/sets?orderBy=-releaseDate&pageSize=250');P.sets=(await r.json()).data;renderSets()}catch(e){$('#setGrid').innerHTML='<div class="notice">Could not reach the Pokémon card database.</div>'}}
+function setPct(id,total){let n=Object.keys(P.collection).filter(k=>k.startsWith(id+'-')&&Object.values(P.collection[k]).some(x=>x>0)).length;return Math.round(n/(total||1)*100)}
+function renderSets(){let q=$('#pSearch').value.toLowerCase();let sets=P.sets.filter(s=>!q||s.name.toLowerCase().includes(q)||s.series.toLowerCase().includes(q));$('#setGrid').innerHTML=sets.map(s=>{let p=setPct(s.id,s.total);return `<button class="tile" onclick="openSet('${s.id}')"><img src="${s.images.logo}" loading="lazy"><b>${s.name}</b><div class="meta">${s.series} · ${s.releaseDate}</div><div class="progress"><i style="width:${p}%"></i></div><div class="meta">${p}% collected</div></button>`}).join('')}
+async function openSet(id){P.set=P.sets.find(s=>s.id===id);$('#pSets').classList.add('hidden');$('#pCards').classList.remove('hidden');$('#setTitle').textContent=P.set.name;$('#cardGrid').innerHTML='<div class="notice">Loading cards…</div>';let all=[],page=1;try{while(true){let r=await fetch(`${API}/cards?q=set.id:${id}&page=${page}&pageSize=250&orderBy=number`),j=await r.json();all.push(...j.data);if(all.length>=j.totalCount)break;page++}P.cards=all;renderCards();updatePKpis()}catch(e){$('#cardGrid').innerHTML='<div class="notice">Could not load cards.</div>'}}
+function backSets(){P.set=null;P.cards=[];$('#pCards').classList.add('hidden');$('#pSets').classList.remove('hidden');renderSets();updatePKpis()}
+function renderCards(){let q=$('#pSearch').value.toLowerCase(),f=$('#pFilter').value;let cards=P.cards.filter(c=>{let v=variants(c.id),have=(v.regular||v.reverse||v.holo)>0;return(!q||c.name.toLowerCase().includes(q)||String(c.number).includes(q))&&(f==='all'||f==='have'&&have||f==='need'&&!have)});let have=P.cards.filter(c=>Object.values(variants(c.id)).some(x=>x>0)).length,p=P.cards.length?Math.round(have/P.cards.length*100):0;$('#setMeta').innerHTML=`${have} of ${P.cards.length} unique cards collected · ${p}%<div class="progress"><i style="width:${p}%"></i></div>`;$('#cardGrid').innerHTML=cards.map(c=>{let v=variants(c.id);return `<article class="card"><img src="${c.images.small}" loading="lazy"><div class="body"><div class="name">${c.name}</div><div class="meta">${c.number}/${c.set.printedTotal} · ${c.rarity||'—'}</div><div class="checks">${['regular','reverse','holo'].map(t=>`<label><span>${t==='reverse'?'Reverse Holo':t[0].toUpperCase()+t.slice(1)}</span><input type="checkbox" ${v[t]>0?'checked':''} onchange="toggleVar('${c.id}','${t}',this.checked)"></label>`).join('')}</div></div></article>`}).join('')||'<div class="notice">No matching cards.</div>'}
+function toggleVar(id,t,on){P.collection[id]=variants(id);P.collection[id][t]=on?1:0;save();renderCards()}
+$('#pSearch').oninput=()=>P.set?renderCards():renderSets();$('#pFilter').onchange=()=>P.set&&renderCards();
+const coinTypes=[['Pennies','1¢'],['Nickels','5¢'],['Dimes','10¢'],['Quarters','25¢'],['Half Dollars','50¢'],['Dollar Coins','$1']];
+function renderCoins(){$('#coinGrid').innerHTML=coinTypes.map(x=>`<button class="tile"><b>${x[0]}</b><div class="meta">${x[1]} · Type → Year → Mint/Variant</div><div class="progress"><i style="width:0%"></i></div></button>`).join('')}
+if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js');updatePKpis();renderCoins();
+</script></body></html>
