@@ -1,16 +1,17 @@
-# Collection Hub v5
+# Collection Hub v6 — Fixed Set Symbols
 
-Pokémon set-symbol fallback update.
+This fixes the prior update.
 
-## Behavior
-- If a Pokémon set has a matching official set symbol from the card database, that individual set symbol is displayed.
-- If no symbol match is found, the Pokémon symbol supplied for the project is displayed instead.
-- English and Japanese set tabs remain separate.
-- Pokémon collection data and the Coin collection are unchanged.
+## What changed
+- Set tiles now actually render an image.
+- Matching Pokémon TCG sets use their individual set symbol.
+- Any set without a match uses `pokemon-set-fallback.png`.
+- Broken remote symbol images also fall back automatically.
+- English and Japanese sets are split into separate tabs.
+- Your Pokémon and coin data remain unchanged.
 
-## GitHub update
-Upload/replace these files in the root of the existing repository:
-
+## Upload to GitHub
+Replace/upload:
 - index.html
 - pokemon-data.json
 - manifest.webmanifest
@@ -18,6 +19,4 @@ Upload/replace these files in the root of the existing repository:
 - icon.svg
 - pokemon-set-fallback.png
 
-If `set-symbol-fallback.png` from v4 is still in the repository, it can be deleted after the new file is uploaded.
-
-After committing, wait for GitHub Pages to deploy and refresh the website in the browser before reopening the installed phone app.
+Then commit, wait for GitHub Pages to deploy, and hard-refresh the site once in the browser.
