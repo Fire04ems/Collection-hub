@@ -1,16 +1,16 @@
-# Collection Hub v6 — Fixed Set Symbols
+# Collection Hub v7 — Japanese Set Symbols
 
-This fixes the prior update.
+This update adds the exact Japanese set-symbol images embedded in your Pokémon Excel workbook.
 
-## What changed
-- Set tiles now actually render an image.
-- Matching Pokémon TCG sets use their individual set symbol.
-- Any set without a match uses `pokemon-set-fallback.png`.
-- Broken remote symbol images also fall back automatically.
-- English and Japanese sets are split into separate tabs.
-- Your Pokémon and coin data remain unchanged.
+- Japanese symbols imported: 21
+- Japanese sets matched: 21
+- Japanese tiles use the workbook symbol first.
+- English tiles continue using the Pokémon TCG set symbol when available.
+- Unmatched sets still use `pokemon-set-fallback.png`.
+- Coin data and Pokémon Have/Need data remain unchanged.
 
-## Upload to GitHub
+## Upload to the existing GitHub repository
+
 Replace/upload:
 - index.html
 - pokemon-data.json
@@ -18,5 +18,8 @@ Replace/upload:
 - sw.js
 - icon.svg
 - pokemon-set-fallback.png
+- the entire `japanese-symbols` folder
 
-Then commit, wait for GitHub Pages to deploy, and hard-refresh the site once in the browser.
+The `japanese-symbols` folder is required.
+
+After committing, wait for GitHub Pages to deploy, refresh the site in the browser, then reopen the Home Screen app.
