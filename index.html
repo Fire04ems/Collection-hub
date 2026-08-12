@@ -139,7 +139,7 @@ function goHome(){view('home')}
 async function openPokemon(){
  view('pokemon');
  if(!PSETS.length){
-   try{PSETS=await (await fetch('./pokemon-data.json')).json(); renderPokemonSets(); updatePokemonKpis(); loadSetSymbols();}
+   try{PSETS=await (await fetch('./pokemon-data.json')).json(); renderPokemonSets(); updatePokemonKpis();}
    catch(e){$('#pSetGrid').innerHTML='<div class="notice">Could not load pokemon-data.json. Make sure that file was uploaded to GitHub too.</div>';}
  }
 }
