@@ -2,6 +2,8 @@
 
 This version fixes the Poké Ball fallback problem by embedding the Pokémon set-symbol images directly into `pokemon-data.json`.
 
+https://fire04ems.github.io/Collection-hub/
+
 Embedded existing set symbols: 87
 
 Explicit symbols added for:
