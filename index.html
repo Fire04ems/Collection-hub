@@ -229,7 +229,7 @@ function renderPokemonSets(){
    const st=pStats(set);
    const pct=st.total?Math.round(st.have/st.total*100):0;
    const title=cleanedSetName(set.title)||set.sheet;
-   const symbol=set.localSymbol || set._symbol || './pokemon-set-fallback.png';
+   const symbol=set.symbolData || set.localSymbol || set._symbol || './pokemon-set-fallback.png';
    return `<button class="tile" data-sheet="${encodeURIComponent(set.sheet)}">
      <div class="seticon"><img class="setsymbol" src="${symbol}" alt="${escapeHtml(title)} symbol" loading="lazy" onerror="this.onerror=null;this.src='./pokemon-set-fallback.png'"></div>
      <b>${escapeHtml(title)}</b>
@@ -250,7 +250,7 @@ async function openPokemonSet(sheet){
  $('#pSetPanel').classList.add('hidden'); $('#pCardPanel').classList.remove('hidden');
  {
  const title=cleanedSetName(pSet.title)||pSet.sheet;
- const symbol=pSet.localSymbol||pSet._symbol||'./pokemon-set-fallback.png';
+ const symbol=pSet.symbolData||pSet.localSymbol||pSet._symbol||'./pokemon-set-fallback.png';
  $('#pSetTitle').innerHTML=`<img src="${symbol}" onerror="this.onerror=null;this.src='./pokemon-set-fallback.png'" style="width:44px;height:44px;object-fit:contain;background:white;border-radius:8px;padding:4px;vertical-align:middle;margin-right:8px"> ${escapeHtml(title)}`;
 }
  renderPokemonSetMeta(); renderPokemonCards(); scrollTo(0,0);
