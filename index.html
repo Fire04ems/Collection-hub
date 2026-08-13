@@ -233,7 +233,7 @@ function renderPokemonSets(){
    return `<button class="tile" data-sheet="${encodeURIComponent(set.sheet)}">
      <div class="seticon"><img class="setsymbol" src="${symbol}" alt="${escapeHtml(title)} symbol" loading="lazy" onerror="this.onerror=null;this.src='./pokemon-set-fallback.png'"></div>
      <b>${escapeHtml(title)}</b>
-     <div class="meta">${set.cards.length} cards · ${st.have} have / ${st.need} need</div>
+     <div class="meta"><b>Total Owned:</b> ${st.have.toLocaleString()} · <b>Total Needed:</b> ${st.need.toLocaleString()}</div>
      <div class="progress"><i style="width:${pct}%"></i></div>
      <div class="meta">${pct}% complete</div>
      <span class="badge">${escapeHtml(set.sheet)}</span>
@@ -261,7 +261,7 @@ function backPokemonSets(){
 }
 function renderPokemonSetMeta(){
  if(!pSet)return; const st=pStats(pSet),pct=st.total?Math.round(st.have/st.total*100):0;
- $('#pSetMeta').innerHTML=`${st.have} variations have · ${st.need} needed · ${st.unavail} unavailable · ${pct}% complete<div class="progress"><i style="width:${pct}%"></i></div>`;
+ $('#pSetMeta').innerHTML=`Total Owned: ${st.have.toLocaleString()} · Total Needed: ${st.need.toLocaleString()} · ${pct}% complete<div class="progress"><i style="width:${pct}%"></i></div>`;
 }
 function cardHave(c){return Object.keys(c.variations).some(v=>pQty(c,v)>0)}
 function cardNeed(c){return Object.keys(c.variations).some(v=>pQty(c,v)===0)}
