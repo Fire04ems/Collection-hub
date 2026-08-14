@@ -1,15 +1,22 @@
-# Collection Hub v15 — Numeric Ordering
+# Collection Hub v16 — Pokémon Count Recalculation Fix
 
-Pokémon ordering is now normalized automatically.
+This update fixes counts after Sync Excel.
 
-- Pokémon set tiles are sorted in natural numeric order.
-- Cards inside every set are sorted by card number.
-- Numeric card numbers sort correctly: 1, 2, 3, 10, 11 rather than 1, 10, 11, 2, 3.
-- Numbered suffixes are handled naturally where possible.
-- Sorting runs again after **Sync Excel**, so newly added spreadsheet items move into the correct position automatically.
-- English and Japanese remain separated.
+After a sync, the app now recalculates totals directly from the live collection structure, including:
+- newly added sets
+- newly added cards
+- newly added variation columns
+- updated Have / Need values
+- updated quantities
 
-All v14 full Excel sync features remain included.
+Set tiles immediately refresh:
+- Total Owned
+- Total Needed
+- Completion %
+
+The overall Pokémon totals at the top also refresh immediately.
+
+Number ordering from v15 remains enabled.
 
 Upload/replace all files from this package in GitHub.
-Cache version: v15.
+Cache version: v16.

@@ -212,16 +212,44 @@ function setPQty(card,label,q){
 function pStats(set=null){
  let have=0,need=0,unavail=0;
  const sets=set?[set]:PSETS;
- sets.forEach(s=>s.cards.forEach(c=>Object.keys(c.variations).forEach(v=>{
-   const q=pQty(c,v); if(q>0)have++; else if(q===0)need++; else unavail++;
- })));
+ for(const s of sets){
+   for(const card of (s.cards||[])){
+     for(const variation of Object.keys(card.variations||{})){
+       const q=pQty(card,variation);
+       if(q>0)have++;
+       else if(q===0)need++;
+       else unavail++;
+     }
+   }
+ }
  return {have,need,unavail,total:have+need};
 }
+
+function recalculatePokemonCounts(){
+ // Rebuild totals from the live PSETS structure, including anything added by Sync Excel.
+ let totalHave=0,totalNeed=0,totalUnavailable=0;
+ for(const set of PSETS){
+   for(const card of (set.cards||[])){
+     for(const variation of Object.keys(card.variations||{})){
+       const q=pQty(card,variation);
+       if(q>0)totalHave++;
+       else if(q===0)totalNeed++;
+       else totalUnavailable++;
+     }
+   }
+ }
+ const totalTrackable=totalHave+totalNeed;
+ if($('#pHave'))$('#pHave').textContent=totalHave.toLocaleString();
+ if($('#pNeed'))$('#pNeed').textContent=totalNeed.toLocaleString();
+ if($('#pPct'))$('#pPct').textContent=totalTrackable?Math.round(totalHave/totalTrackable*100)+'%':'0%';
+ return {have:totalHave,need:totalNeed,unavailable:totalUnavailable,total:totalTrackable};
+}
+
 function updatePokemonKpis(){
- const s=pStats(); $('#pHave').textContent=s.have.toLocaleString(); $('#pNeed').textContent=s.need.toLocaleString();
- $('#pPct').textContent=s.total?Math.round(s.have/s.total*100)+'%':'0%';
+ const totals=recalculatePokemonCounts();
  if(pSet)renderPokemonSetMeta();
 }
+
 function cleanedSetName(s){
  return String(s||'').replace(/^\s*\d+[aj]?\.?\s*/i,'').replace(/\([^)]*\)/g,'').replace(/j\.?\s*$/i,'').trim();
 }
@@ -600,9 +628,14 @@ function syncParsedSet(sheetName,parsed){
    if(!card){
      const cardId=`${set.sheet}::${pc.number}::${pc.name}`;
      card={id:cardId,number:pc.number,name:pc.name,variations:{}};
+     for(const rawLabel of Object.keys(pc.variations||{})){
+       const v=normalizeImportVariation(rawLabel);
+       card.variations[v]=0;
+     }
      set.cards.push(card);
      newCards++;
      rememberPokemonStructure(set,card);
+     for(const v of Object.keys(card.variations))rememberPokemonStructure(set,card,v);
    } else {
      matchedCards++;
    }
@@ -613,8 +646,9 @@ function syncParsedSet(sheetName,parsed){
        card.variations[key]=0;
        newVariations++;
        rememberPokemonStructure(set,card,key);
-     }
-     if(pQty(card,key)!==q){
+       PEDITS[pKey(card,key)]=q;
+       updatedValues++;
+     }else if(pQty(card,key)!==q){
        PEDITS[pKey(card,key)]=q;
        updatedValues++;
      }
@@ -653,6 +687,7 @@ async function importPokemonSpreadsheet(file){
    savePokemonStructureOverlay();
    sortPokemonData();
    updatePokemonKpis();
+   renderPokemonSets();
    if(pSet){
      const latest=PSETS.find(s=>s.sheet===pSet.sheet);
      if(latest)pSet=latest;
